@@ -28,8 +28,11 @@ Fill in the list of cell phone recipients
     );
 
 
-Lastly, enter your Twilio sandbox # here:
+Also, enter your Twilio sandbox # here:
 $sandboxNumber = "xxx-xxx-xxxx"; 
+
+Lastly, call the program by invoking 'testAcallable.html'
+
 
 Install questions or enhancements feel free email davermn5 at gmail dot com
 
