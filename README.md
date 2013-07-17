@@ -31,5 +31,5 @@ Fill in the list of cell phone recipients
 Lastly, enter your Twilio sandbox # here:
 $sandboxNumber = "xxx-xxx-xxxx"; 
 
-Install questions or enhancements feel free email davermn5@gmail.com
+Install questions or enhancements feel free email davermn5 at gmail dot com
 
