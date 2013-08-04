@@ -59,29 +59,36 @@
   $hosts = array('www.google.com', 'www.gorags1234.com');
    $head = array_pop($hosts);
   $serverA = new ServerSMS();
-  if( !is_null($latency = $serverA->getHostLatency($head)) )
-  {
-   if( $latency > 0)  //Server is up..
+  try{
+   if( !is_null($latency = $serverA->getHostLatency($head)) )
    {
-    echo 1;
+    if( $latency > 0)  //Server is up..
+    {
+     echo 1;
+    }
+    elseif( $latency === FALSE ) //Server is down.. Only activate SMS service during downtime.
+    {
+     //Enter Twilio creds here:
+     $AccountSid = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+     $AuthToken  = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+    
+     //Enter List of phone #'s and names here:
+     $toList = array(
+                  '+yournumberhere' => "yournamehere"
+     );
+    
+     //Enter Twilio sandbox # here:
+     $sandboxNumber = "xxx-xxx-xxxx";   
+    
+     $serverA->serverIsDown( $AccountSid, $AuthToken, $toList, $sandboxNumber );
+     echo 0;   //Ajax callback value..
+    }
    }
-   elseif( $latency === FALSE ) //Server is down..
-   {
-    //Enter Twilio creds here:
-    $AccountSid = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
-    $AuthToken  = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
-    
-    //Enter List of phone #'s and names here:
-    $toList = array(
-                 '+1yournumberhere' => "yournamehere"
-    );
-    
-    //Enter Twilio sandbox # here:
-    $sandboxNumber = "xxx-xxx-xxxx";  
-    
-    $serverA->serverIsDown( $AccountSid, $AuthToken, $toList, $sandboxNumber );
-    echo 0;   //Ajax callback value..
-   }
+  }catch(Exception $e){
+   echo $e->getMessage();
   }
+  
+  
+  
   
 ?>
