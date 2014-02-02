@@ -1,73 +1,70 @@
 <?php
-/**
- * Helpful utility created for shadyDev, Inc.
- *
- * @author davermn5
- * @version 0.1.0
- *
- * May 15th 2013
- */
-require_once('ping.php');
-require_once('twilio/Services/Twilio.php');
+	/**
+	 * The purpose of this class is to provide an ajax response which notifies the user
+	 *  if the website is up or down.
+	 *
+	 * @author  davermn5
+	 * @version 0.1.0
+	 *
+	 * May 15th 2013
+	 */
+	require_once('ping.php');
+	require_once('twilio/Services/Twilio.php');
 
-class ServerSMS
-{
-
-	protected $target_host = "";
-
-	public function __construct()
+	class ServerSMS
 	{
+		/**
+		 * @var string
+		 */
+		protected $target_host = "";
+
+		public function __construct()
+		{
+		}
+
+		/**
+		 * Gets the amount of time taken to ping a remote host
+		 *
+		 * @param  string $target_host Represents the remote server host we wish to ping
+		 *
+		 * @return integer | boolean
+		 *  Returns either the number of milliseconds upon success or
+		 *  false if the remote server is down.
+		 */
+		public function getHostLatency($target_host)
+		{
+			$this->target_host = $target_host;
+			$ping = new Ping($target_host);
+			$latency = $ping->ping();
+
+			return $latency;
+		}
+
+
+		/**
+		 * @param string $AccountSid  Represents the first Twilio authentication credential (1/2).
+		 * @param string $AuthToken   Represents the second Twilio authentication credential (2/2).
+		 * @param array $toList       Describes a multi-dimensional array of stringified key=>value pairs.
+		 *                            The values are the phone numbers you wish to send text notifications to.
+		 * @param $sandboxNumber      This is the Twilio sandbox number provided to you upon initial Twilio account creation.
+		 */
+		public function serverIsDown($AccountSid, $AuthToken, $toList, $sandboxNumber)
+		{
+			$client = new Services_Twilio($AccountSid, $AuthToken);
+
+			foreach ($toList as $number => $name) {
+				$serverDownMessage = "Hey " . $name . ", the server at " . $this->target_host . " is down.";
+				$sms = $client->account->sms_messages->create($sandboxNumber, $number, $serverDownMessage);
+			}
+		}
 	}
-
-	/*
-	   *  Method  getHostLatency()
-	   *  @Purpose Establish connection at tcp/ip layer
-	   *   @param  string  $target_host  The server we wish to gain status info from..
-	   *
-	   *  @return  @mixed  int || FALSE  Either # millisecs(success) OR FALSE if server down(failure)
-	   */
-	public function getHostLatency($target_host)
-	{
-		$this->target_host = $target_host;
-		$ping = new Ping($target_host);
-		$latency = $ping->ping();
-
-		return $latency;
-	}
-
-
-	/*
-	   *  Method  serverIsDown()
-	   *  @Purpose If the server is down, have it do something useful..
-	   *   @param  string  $AccountSid     Twilio credential 1/2
-	   *   @param  string  $AuthToken      Twilio credential 2/2
-	   *   @param  array   $toList         An array of phone #'s you wish to send to
-	   *   @param  string  $sandboxNumber  Twilio sandbox number provided to you
-	   *
-	   *  @return  void
-	   */
-	public function serverIsDown($AccountSid, $AuthToken, $toList, $sandboxNumber)
-	{
-		$client = new Services_Twilio($AccountSid, $AuthToken);
-
-		foreach ($toList as $number => $name) {
-			$serverDownMessage = "Hey " . $name . ", the server at " . $this->target_host . " is down.";
-			$sms = $client->account->sms_messages->create($sandboxNumber, $number, $serverDownMessage);
-		} //end foreach..
-
-	}
-	//end serverIsDown()..
-
-}
-
-//end ServerSMS class..
 
 
 //Here are the instructions to call the public wrapper API to Twilio REST service:
-$hosts = array('www.google.com', 'www.gorags1234.com');
-$head = array_pop($hosts);
-$serverA = new ServerSMS();
-try {
+	$hosts = array('www.google.com', 'www.gorags1234.com');
+	$head = array_pop($hosts);
+	$serverA = new ServerSMS();
+
 	if (!is_null($latency = $serverA->getHostLatency($head))) {
 		if ($latency > 0) //Server is up..
 		{
@@ -90,11 +87,3 @@ try {
 			echo 0; //Ajax callback value..
 		}
 	}
-} catch (Exception $e) {
-	echo $e->getMessage();
-}
-
-
-
-
-?>
