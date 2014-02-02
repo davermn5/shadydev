@@ -1,39 +1,37 @@
 <!DOCTYPE>
 <html>
- <head>
-  <title></title>
-  <script type="text/javascript" src="jquery191.js"></script>
-  <script type="text/javascript">
-   var A_callback = {
-                    A_execute : function(){
-                                     $.ajax({
-                                      type: 'POST',
-                                      url: 'ServerSMS.php',     
-                                      success: function(status){
-                                       if(status == 1)
-                                       {
-                                        alert('website is up.');
-                                       }
-                                       else if(status == 0)
-                                       {
-                                        clearInterval(alert_a);
-                                       }
-                                      } //end success..
-                                     });
-                                       
-                    } //A_execute
-    }; //A_callback
-  
-    A_callback.A_execute();
-    
-    //Every 10 seconds, keep requesting server status..
-    var alert_a = setInterval(function(){
-     A_callback.A_execute(); 
-    }, 10000);
-     
-  </script> 
- </head>
- 
- <body>
- </body>
+<head>
+    <title></title>
+    <script type="text/javascript" src="jquery191.js"></script>
+    <script type="text/javascript">
+        var A_callback = {
+            A_execute: function () {
+                $.ajax({
+                    type: 'POST',
+                    url: 'ServerSMS.php',
+                    success: function (status) {
+                        if (status == 1) {
+                            alert('website is up.');
+                        }
+                        else if (status == 0) {
+                            clearInterval(alert_a);
+                        }
+                    } //end success..
+                });
+
+            } //A_execute
+        }; //A_callback
+
+        A_callback.A_execute();
+
+        //Every 10 seconds, keep requesting server status..
+        var alert_a = setInterval(function () {
+            A_callback.A_execute();
+        }, 10000);
+
+    </script>
+</head>
+
+<body>
+</body>
 </html>
