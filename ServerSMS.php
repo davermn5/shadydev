@@ -65,11 +65,13 @@
 	$head = array_pop($hosts);
 	$serverA = new ServerSMS();
 
-	if (!is_null($latency = $serverA->getHostLatency($head))) {
+	if(!is_null($latency = $serverA->getHostLatency($head)))
+	{
 		if ($latency > 0) //Server is up..
 		{
 			echo 1;
-		} elseif ($latency === FALSE) //Server is down.. Only activate SMS service during downtime.
+		}
+		elseif ($latency === FALSE) //Server is down.. Only activate SMS service during downtime.
 		{
 			//Enter Twilio creds here:
 			$AccountSid = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
